@@ -1,13 +1,16 @@
 package com.sachin.eureka.eurekaserviceprovider.controller;
 
+import com.sachin.eureka.eurekaserviceprovider.EurekaServiceProviderApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * @Author Sachin
@@ -18,6 +21,8 @@ public class HelloController {
 
     @Autowired
     private DiscoveryClient discoveryClient;
+    @Autowired
+    private Environment env;
 
 
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
@@ -33,7 +38,15 @@ public class HelloController {
 
 
         }
-        return "hello world";
+
+        Random random = new Random();
+        int i = random.nextInt(2000);
+        try {
+            Thread.sleep(i);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return "hello world- applicationName:" + env.getProperty("spring.application.name") + " applicationPort:" + EurekaServiceProviderApplication.serverPort + "--- sleepTime:" + i;
 
     }
 }
